@@ -1,16 +1,16 @@
-# chrono-human-duration
+# basic-human-duration
 
-Very small crate for format durations for humans.
+A very small crate to format durations for humans.
 
-In comparison to the original repo...
-- supports months
-- adjustes what is considered "just now" (before it was <60 minutes, now it is <60 seconds)
-- other minor adjustments
+In comparison to the original [repo](https://github.com/derekdreery/chrono-human-duration)...
+- this supports months
+- this adjusts what is considered "just now" (before it was <60 minutes, now it is <60 seconds)
+- has other minor adjustments
 
 ## Example
 
 ```rust
-use chrono_human_duration::ChronoHumanDuration;
+use basic_human_duration::ChronoHumanDuration;
 use chrono::Duration;
 
 let d = Duration::weeks(2) + Duration::days(3);
