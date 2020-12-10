@@ -22,32 +22,56 @@ impl fmt::Display for Displayer {
         let mut wrote = false;
         let d = self.d;
 
-        let weeks = d.num_weeks();
-        if weeks > 0 {
-            write!(f, "{} week{}", weeks, if weeks == 1 { "s" } else { "" })?;
+        let months = d.num_weeks() / 4;
+        if months > 0 {
+            write!(f, "{} month{}", months, if months > 1 { "s" } else { "" })?;
             wrote = true;
         } else {
-            let days = d.num_days();
-            if days > 0 {
+            let weeks = d.num_weeks();
+            if weeks > 0 {
                 write!(
                     f,
-                    "{}{} day{}",
+                    "{}{} week{}",
                     if wrote { ", " } else { "" },
-                    days,
-                    if days == 1 { "s" } else { "" }
+                    weeks,
+                    if weeks > 1 { "s" } else { "" }
                 )?;
                 wrote = true;
             } else {
-                let hours = d.num_hours();
-                if hours > 0 {
+                let days = d.num_days();
+                if days > 0 {
                     write!(
                         f,
-                        "{}{} hour{}",
+                        "{}{} day{}",
                         if wrote { ", " } else { "" },
-                        hours,
-                        if days == 1 { "s" } else { "" }
+                        days,
+                        if days > 1 { "s" } else { "" }
                     )?;
                     wrote = true;
+                } else {
+                    let hours = d.num_hours();
+                    if hours > 0 {
+                        write!(
+                            f,
+                            "{}{} hour{}",
+                            if wrote { ", " } else { "" },
+                            hours,
+                            if hours > 1 { "s" } else { "" }
+                        )?;
+                        wrote = true;
+                    } else {
+                        let minutes = d.num_minutes();
+                        if minutes > 0 {
+                            write!(
+                                f,
+                                "{}{} minute{}",
+                                if wrote { ", " } else { "" },
+                                minutes,
+                                if minutes > 1 { "s" } else { "" }
+                            )?;
+                            wrote = true;
+                        }
+                    }
                 }
             }
         }
@@ -69,7 +93,25 @@ mod tests {
     fn it_works() {
         let d = Duration::weeks(2) + Duration::days(3) + Duration::hours(2) + Duration::minutes(20);
         assert_eq!(d.format_human().to_string(), "2 weeks ago");
-        let d = Duration::minutes(20);
+        let d = Duration::weeks(1);
+        assert_eq!(d.format_human().to_string(), "1 week ago");
+        let d = Duration::days(2) + Duration::hours(2);
+        assert_eq!(d.format_human().to_string(), "2 days ago");
+        let d = Duration::days(1);
+        assert_eq!(d.format_human().to_string(), "1 day ago");
+        let d = Duration::hours(2);
+        assert_eq!(d.format_human().to_string(), "2 hours ago");
+        let d = Duration::hours(1);
+        assert_eq!(d.format_human().to_string(), "1 hour ago");
+        let d = Duration::minutes(2);
+        assert_eq!(d.format_human().to_string(), "2 minutes ago");
+        let d = Duration::minutes(1);
+        assert_eq!(d.format_human().to_string(), "1 minute ago");
+        let d = Duration::seconds(60);
+        assert_eq!(d.format_human().to_string(), "1 minute ago");
+        let d = Duration::seconds(59);
+        assert_eq!(d.format_human().to_string(), "just now");
+        let d = Duration::seconds(1);
         assert_eq!(d.format_human().to_string(), "just now");
     }
 }
