@@ -1,5 +1,5 @@
-use chrono::Duration;
 use std::fmt;
+use time::Duration;
 
 pub trait ChronoHumanDuration {
     type Displayer: fmt::Display;
@@ -22,12 +22,12 @@ impl fmt::Display for Displayer {
         let mut wrote = false;
         let d = self.d;
 
-        let months = d.num_weeks() / 4;
+        let months = d.whole_weeks() / 4;
         if months > 0 {
             write!(f, "{} month{}", months, if months > 1 { "s" } else { "" })?;
             wrote = true;
         } else {
-            let weeks = d.num_weeks();
+            let weeks = d.whole_weeks();
             if weeks > 0 {
                 write!(
                     f,
@@ -38,7 +38,7 @@ impl fmt::Display for Displayer {
                 )?;
                 wrote = true;
             } else {
-                let days = d.num_days();
+                let days = d.whole_days();
                 if days > 0 {
                     write!(
                         f,
@@ -49,7 +49,7 @@ impl fmt::Display for Displayer {
                     )?;
                     wrote = true;
                 } else {
-                    let hours = d.num_hours();
+                    let hours = d.whole_hours();
                     if hours > 0 {
                         write!(
                             f,
@@ -60,7 +60,7 @@ impl fmt::Display for Displayer {
                         )?;
                         wrote = true;
                     } else {
-                        let minutes = d.num_minutes();
+                        let minutes = d.whole_minutes();
                         if minutes > 0 {
                             write!(
                                 f,
@@ -86,8 +86,8 @@ impl fmt::Display for Displayer {
 
 #[cfg(test)]
 mod tests {
-    use super::ChronoHumanDuration;
-    use chrono::Duration;
+    use time::Duration;
+    use crate::ChronoHumanDuration;
 
     #[test]
     fn it_works() {
